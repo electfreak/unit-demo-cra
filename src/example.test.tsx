@@ -10,7 +10,7 @@ import { initStore } from "./store";
 import { Application } from "./Application";
 
 it('по адресу /about должна открываться страница "о проекте"', () => {
-  const store = initStore();
+  const store = initStore();asldfkjas
   const application = (
     <MemoryRouter initialEntries={["/about"]} initialIndex={0}>
       <Provider store={store}>
