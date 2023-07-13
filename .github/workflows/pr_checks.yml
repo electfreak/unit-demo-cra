@@ -1,7 +1,7 @@
 name: CI checks on pull request
 on: [pull_request]
 jobs:
-  lint:
+  lint-code:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -14,7 +14,7 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Lint
+      - name: Lint code
         run: npm run lint
 
   unit-tests:
