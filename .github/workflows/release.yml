@@ -1,0 +1,49 @@
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v[0-9]+" # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: Create Release
+
+jobs:
+  run_pr_checks:
+    uses: ./.github/workflows/pr_checks.yml
+
+  build:
+    # defaults:
+    #   run:
+    #     working-directory: .
+    
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release version ${{ github.ref }}
+          body: | 
+            ## Changelog:
+            ${{steps.github_release.outputs.changelog}}
+            ## Tests result:
+            ${{ env.tests_report }}
+          
+          draft: false
+          prerelease: false
