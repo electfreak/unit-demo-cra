@@ -13,6 +13,8 @@ jobs:
 
   create_changelog:
     runs-on: ubuntu-latest
+    outputs:
+      changelog: ${{ steps.github_release.outputs.changelog }}
     steps:
       - name: Build Changelog
         id: github_release
