@@ -31,7 +31,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Open Issue
       - uses: JasonEtco/create-an-issue@v2
         env:
           changelog: ${{steps.github_release.outputs.changelog}}
