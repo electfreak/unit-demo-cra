@@ -12,10 +12,7 @@ jobs:
     uses: ./.github/workflows/pr_checks.yml
 
   build:
-    # defaults:
-    #   run:
-    #     working-directory: .
-    
+    needs: run_pr_checks
     name: Create Release
     runs-on: ubuntu-latest
     steps:
