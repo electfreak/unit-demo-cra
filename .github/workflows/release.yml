@@ -33,8 +33,12 @@ jobs:
 
       - uses: JasonEtco/create-an-issue@v2
         env:
-          changelog: ${{steps.github_release.outputs.changelog}}
+          version: ${{ github.ref }}
+          tests_url: ${{ needs.run_pr_checks.outputs.url }}
+          changelog: ${{ steps.github_release.outputs.changelog }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+           update_existing: true
           
       - name: Create Release
         id: create_release
