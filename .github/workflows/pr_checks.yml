@@ -1,6 +1,11 @@
 name: CI checks on pull request
 on: 
   workflow_call:
+    outputs:
+      url:
+        description: "URL to this workflow in GH interface"
+        value: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+  
   pull_request:
 
 jobs:

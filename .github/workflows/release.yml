@@ -11,13 +11,16 @@ jobs:
   run_pr_checks:
     uses: ./.github/workflows/pr_checks.yml
 
-  build:
+  create_release:
     needs: run_pr_checks
     name: Create Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Show link to tests
+        run: echo ${{ needs.run_pr_checks.outputs.url }}
 
       - name: Install deps
         run: npm ci
@@ -28,6 +31,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Open Issue
+      - uses: JasonEtco/create-an-issue@v2
+        env:
+          changelog: ${{steps.github_release.outputs.changelog}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
