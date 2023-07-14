@@ -14,10 +14,10 @@ jobs:
   create_changelog:
     runs-on: ubuntu-latest
     outputs:
-      changelog: ${{ steps.github_release.outputs.changelog }}
+      changelog: ${{ steps.build_changelog.outputs.changelog }}
     steps:
       - name: Build Changelog
-        id: github_release
+        id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v3
         with:
           commitMode: "true"
@@ -31,9 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - name: Show link to tests
-        run: echo ${{ needs.run_pr_checks.outputs.url }}
 
       - name: Create Issue
         uses: JasonEtco/create-an-issue@v2
@@ -64,7 +61,7 @@ jobs:
             ## Changelog:
             ${{ needs.create_changelog.outputs.changelog }}
             ## Tests result:
-            ${{ env.tests_report }}
+            ${{ needs.run_pr_checks.outputs.url }}
 
           draft: false
           prerelease: false
