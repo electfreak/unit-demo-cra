@@ -12,6 +12,7 @@ jobs:
     uses: ./.github/workflows/pr_checks.yml
 
   create_changelog:
+    runs-on: ubuntu-latest
     steps:
       - name: Build Changelog
         id: github_release
