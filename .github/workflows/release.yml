@@ -26,6 +26,8 @@ jobs:
           commitMode: "true"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - run: echo "${{ toJson(steps.build_changelog.outputs) }}"
 
   create_issue:
     needs: [run_pr_checks, create_changelog]
