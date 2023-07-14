@@ -11,35 +11,44 @@ jobs:
   run_pr_checks:
     uses: ./.github/workflows/pr_checks.yml
 
-  create_release:
-    needs: run_pr_checks
-    name: Create Release
+  create_changelog:
+    steps:
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
+        with:
+          commitMode: "true"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create_issue:
+    needs: [run_pr_checks, create_changelog]
+    if: ${{ always() }}
+    name: Create Issue
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Show link to tests
         run: echo ${{ needs.run_pr_checks.outputs.url }}
 
-      - name: Install deps
-        run: npm ci
-
-      - name: Build Changelog
-        id: github_release
-        uses: mikepenz/release-changelog-builder-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: JasonEtco/create-an-issue@v2
+      - name: Create Issue
+        uses: JasonEtco/create-an-issue@v2
         env:
           version: ${{ github.ref }}
           tests_url: ${{ needs.run_pr_checks.outputs.url }}
-          changelog: ${{ steps.github_release.outputs.changelog }}
+          changelog: ${{ needs.create_changelog.outputs.changelog }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-           update_existing: true
-          
+          update_existing: true
+
+  create_release:
+    needs: [run_pr_checks, create_changelog]
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -48,11 +57,11 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release version ${{ github.ref }}
-          body: | 
+          body: |
             ## Changelog:
-            ${{steps.github_release.outputs.changelog}}
+            ${{ needs.create_changelog.outputs.changelog }}
             ## Tests result:
             ${{ env.tests_report }}
-          
+
           draft: false
           prerelease: false

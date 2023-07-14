@@ -1,6 +1,6 @@
 ---
-title: Release {{ env.version }}
+title: "RELEASE: {{ env.version }}"
 labels: release
 ---
 {{ env.changelog }}
-[Link to test]({{ env.test_url }})
+[Link to test]({{ env.tests_url }})
