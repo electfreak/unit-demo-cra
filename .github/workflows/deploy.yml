@@ -37,10 +37,12 @@ jobs:
           publicPath: ${{ format('/{0}/', github.event.repository.name) }}
         run: npm run build
 
+      - run: mkdir dist && mv build/* dist/
+
       - name: Upload production-ready build files
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./build
+          path: ./dist
 
   deploy:
     needs: build
