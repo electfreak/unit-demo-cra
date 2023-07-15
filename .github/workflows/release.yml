@@ -71,4 +71,5 @@ jobs:
           prerelease: false
 
   deploy:
+    needs: run_pr_checks
     uses: ./.github/workflows/deploy.yml
