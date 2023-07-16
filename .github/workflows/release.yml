@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: gh close issue ${{ needs.run_pr_checks.outputs.number }} -c "Tests are passed"
+      - run: gh issue close ${{ needs.run_pr_checks.outputs.number }} -c "Tests are passed"
 
   create_release:
     needs: [run_pr_checks, create_changelog]
