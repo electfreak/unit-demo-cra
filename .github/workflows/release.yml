@@ -51,6 +51,8 @@ jobs:
     needs: create_issue
     name: Close issue
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - run: gh issue close ${{ needs.create_issue.outputs.number }} -c "Tests are passed"
