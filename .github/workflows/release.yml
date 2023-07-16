@@ -23,7 +23,7 @@ jobs:
         with:
           token: ${{ github.token }}
           tag: ${{ github.ref_name }}
-      
+
       - run: echo "${{ toJson(steps.build_changelog.outputs) }}"
 
   create_issue:
@@ -51,9 +51,9 @@ jobs:
     needs: run_pr_checks
     name: Close issue
     runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - run: gh close issue ${{ needs.run_pr_checks.outputs.number }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: gh close issue ${{ needs.run_pr_checks.outputs.number }} -c "Tests are passed"
 
   create_release:
     needs: [run_pr_checks, create_changelog]
