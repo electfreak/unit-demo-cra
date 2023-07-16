@@ -31,10 +31,13 @@ jobs:
     if: ${{ always() }}
     name: Create Issue
     runs-on: ubuntu-latest
+    outputs:
+      number: ${{ steps.create-issue.outputs.number }}
     steps:
       - uses: actions/checkout@v3
 
       - name: Create Issue
+        id: create-issue
         uses: JasonEtco/create-an-issue@v2
         env:
           version: ${{ github.ref_name }}
@@ -43,6 +46,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           update_existing: true
+
+  close_issue:
+    needs: run_pr_checks
+    name: Close issue
+    runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - run: gh close issue ${{ needs.run_pr_checks.outputs.number }}
 
   create_release:
     needs: [run_pr_checks, create_changelog]
