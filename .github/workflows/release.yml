@@ -37,7 +37,7 @@ jobs:
       - name: Create Issue
         uses: JasonEtco/create-an-issue@v2
         env:
-          version: ${{ github.ref }}
+          version: ${{ github.ref_name }}
           tests_url: ${{ needs.run_pr_checks.outputs.url }}
           changelog: ${{ needs.create_changelog.outputs.changelog }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
