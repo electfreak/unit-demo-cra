@@ -34,7 +34,7 @@ jobs:
 
       - name: Build project
         env: 
-          publicPath: ${{ format('/{0}/', github.event.repository.name) }}
+          PUBLIC_URL: ${{ format('/{0}/', github.event.repository.name) }}
         run: npm run build
 
       - name: Upload production-ready build files
